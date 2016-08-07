@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Local Search View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LocalSearchViewController" customModule="LocalSearch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -15,11 +17,69 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="YTZ-gf-c6A">
+                                <rect key="frame" x="0.0" y="64" width="600" height="336"/>
+                            </mapView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Ohj-AF-eOV">
+                                <rect key="frame" x="0.0" y="400" width="600" height="200"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="5q9-ia-Wbq"/>
+                                </constraints>
+                            </tableView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Zyw-jn-HUs">
+                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNn-jk-7fg">
+                                <rect key="frame" x="550" y="362" width="30" height="30"/>
+                                <state key="normal" title="Init"/>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="YTZ-gf-c6A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="1Dr-1T-6N5"/>
+                            <constraint firstItem="Ohj-AF-eOV" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="7Yp-Ta-EsB"/>
+                            <constraint firstItem="YTZ-gf-c6A" firstAttribute="leading" secondItem="Ohj-AF-eOV" secondAttribute="leading" id="7z7-iG-gPH"/>
+                            <constraint firstAttribute="trailing" secondItem="Zyw-jn-HUs" secondAttribute="trailing" id="8QC-Uw-Ls5"/>
+                            <constraint firstAttribute="trailing" secondItem="YTZ-gf-c6A" secondAttribute="trailing" id="9ff-H0-8et"/>
+                            <constraint firstItem="YTZ-gf-c6A" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="A3k-Ac-D9W"/>
+                            <constraint firstItem="Ohj-AF-eOV" firstAttribute="top" secondItem="YTZ-gf-c6A" secondAttribute="bottom" id="I4s-vp-Qbh"/>
+                            <constraint firstItem="tNn-jk-7fg" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="MBV-RR-RzJ"/>
+                            <constraint firstItem="Zyw-jn-HUs" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="OkS-ju-IFb"/>
+                            <constraint firstItem="YTZ-gf-c6A" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="TLG-Sc-au3"/>
+                            <constraint firstItem="Zyw-jn-HUs" firstAttribute="trailing" secondItem="YTZ-gf-c6A" secondAttribute="trailing" id="YrY-Qg-Pob"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="YTZ-gf-c6A" secondAttribute="bottom" constant="224" id="bwu-g7-ikV"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="YTZ-gf-c6A" secondAttribute="bottom" constant="224" id="eCb-mX-1OA"/>
+                            <constraint firstItem="Zyw-jn-HUs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="g6O-Q9-cZs"/>
+                            <constraint firstItem="Ohj-AF-eOV" firstAttribute="top" secondItem="tNn-jk-7fg" secondAttribute="bottom" constant="8" symbolic="YES" id="kkN-L4-bjQ"/>
+                            <constraint firstItem="Zyw-jn-HUs" firstAttribute="leading" secondItem="YTZ-gf-c6A" secondAttribute="leading" id="m9D-tb-0w3"/>
+                            <constraint firstItem="YTZ-gf-c6A" firstAttribute="trailing" secondItem="Ohj-AF-eOV" secondAttribute="trailing" id="pEQ-uc-el1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="YTZ-gf-c6A" secondAttribute="trailing" constant="-20" id="xfK-mR-hl8"/>
+                            <constraint firstItem="YTZ-gf-c6A" firstAttribute="top" secondItem="Zyw-jn-HUs" secondAttribute="bottom" id="ySL-W2-543"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="1Dr-1T-6N5"/>
+                                <exclude reference="9ff-H0-8et"/>
+                                <exclude reference="A3k-Ac-D9W"/>
+                                <exclude reference="TLG-Sc-au3"/>
+                                <exclude reference="xfK-mR-hl8"/>
+                                <exclude reference="bwu-g7-ikV"/>
+                                <exclude reference="eCb-mX-1OA"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="YTZ-gf-c6A" id="vQg-Uf-8vz"/>
+                        <outlet property="searchBar" destination="Zyw-jn-HUs" id="Ix1-W7-vuF"/>
+                        <outlet property="tableView" destination="Ohj-AF-eOV" id="BCT-Kh-MyH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="413" y="334"/>
         </scene>
     </scenes>
 </document>

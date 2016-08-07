@@ -8,20 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		DF7148A91D57255600ED2613 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7148A81D57255600ED2613 /* AppDelegate.swift */; };
-		DF7148AB1D57255600ED2613 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7148AA1D57255600ED2613 /* ViewController.swift */; };
 		DF7148AE1D57255600ED2613 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF7148AC1D57255600ED2613 /* Main.storyboard */; };
 		DF7148B01D57255600ED2613 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF7148AF1D57255600ED2613 /* Assets.xcassets */; };
 		DF7148B31D57255600ED2613 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF7148B11D57255600ED2613 /* LaunchScreen.storyboard */; };
+		DF7148BD1D5725A300ED2613 /* LocalSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */; };
+		DF7148BF1D572A7900ED2613 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF7148BE1D572A7900ED2613 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		DF7148A51D57255600ED2613 /* LocalSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF7148A81D57255600ED2613 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DF7148AA1D57255600ED2613 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DF7148AD1D57255600ED2613 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DF7148AF1D57255600ED2613 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DF7148B21D57255600ED2613 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DF7148B41D57255700ED2613 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearchViewController.swift; sourceTree = "<group>"; };
+		DF7148BE1D572A7900ED2613 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF7148BF1D572A7900ED2613 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,13 +58,22 @@
 			isa = PBXGroup;
 			children = (
 				DF7148A81D57255600ED2613 /* AppDelegate.swift */,
-				DF7148AA1D57255600ED2613 /* ViewController.swift */,
+				DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */,
 				DF7148AC1D57255600ED2613 /* Main.storyboard */,
 				DF7148AF1D57255600ED2613 /* Assets.xcassets */,
-				DF7148B11D57255600ED2613 /* LaunchScreen.storyboard */,
-				DF7148B41D57255700ED2613 /* Info.plist */,
+				DF7148BE1D572A7900ED2613 /* MapKit.framework */,
+				DF7148C01D572AAF00ED2613 /* Resource File */,
 			);
 			path = LocalSearch;
+			sourceTree = "<group>";
+		};
+		DF7148C01D572AAF00ED2613 /* Resource File */ = {
+			isa = PBXGroup;
+			children = (
+				DF7148B41D57255700ED2613 /* Info.plist */,
+				DF7148B11D57255600ED2613 /* LaunchScreen.storyboard */,
+			);
+			name = "Resource File";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -97,6 +109,11 @@
 					DF7148A41D57255600ED2613 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 5KRYNNRRYA;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -136,7 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF7148AB1D57255600ED2613 /* ViewController.swift in Sources */,
+				DF7148BD1D5725A300ED2613 /* LocalSearchViewController.swift in Sources */,
 				DF7148A91D57255600ED2613 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,7 +269,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = LocalSearch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.liuzhihui.LocalSearch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liuzhihui.Show;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -263,7 +280,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = LocalSearch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.liuzhihui.LocalSearch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liuzhihui.Show;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
