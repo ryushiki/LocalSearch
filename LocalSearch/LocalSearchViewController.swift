@@ -27,12 +27,16 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     @IBOutlet weak var tableView: UITableView! {
         didSet {
             self.tableView.delegate = self
+            self.tableView.dataSource = self
         }
     }
     
-    var mapItems: [MKMapItem] = []
+    @IBAction func initButtonPressed(sender: UIButton) {
+        self.initMapRegion()
+    }
     
-
+    
+    var mapItems: [MKMapItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +45,7 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
         self.initMapRegion()
     }
 
-//MARK: - Search Job
+    //MARK: - Search Job
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         self.searchBar.resignFirstResponder()
         
@@ -55,19 +59,21 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
             self.mapItems.removeAll()
             self.mapView.removeAnnotations(self.mapView.annotations)
             
-            for item in (response?.mapItems)! {
-                let point = MKPointAnnotation()
-                point.coordinate = item.placemark.coordinate
-                point.title = item.placemark.name
-                point.subtitle = item.phoneNumber
-                self.mapView.addAnnotation(point)
-                self.mapItems.append(item)
+            if let mapItems = response?.mapItems {
+                for item in mapItems {
+                    let point = MKPointAnnotation()
+                    point.coordinate = item.placemark.coordinate
+                    point.title = item.placemark.name
+                    point.subtitle = item.phoneNumber
+                    self.mapView.addAnnotation(point)
+                    self.mapItems.append(item)
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+                    self.tableView.reloadData()
+                }
             }
-        }
-        
-        dispatch_async(dispatch_get_main_queue()) { 
-            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
-            self.tableView.reloadData()
         }
         
     }
@@ -82,7 +88,7 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     func searchBarShouldEndEditing(searchBar: UISearchBar) -> Bool {
-        self.searchBar.setShowsCancelButton(true, animated: true)
+        self.searchBar.setShowsCancelButton(false, animated: true)
         return true
     }
     
