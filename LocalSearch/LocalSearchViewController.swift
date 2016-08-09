@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, MKMapViewDelegate {
+class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableViewDelegate, MKMapViewDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar! {
         didSet {
@@ -27,7 +27,6 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     @IBOutlet weak var tableView: UITableView! {
         didSet {
             self.tableView.delegate = self
-            self.tableView.dataSource = self
         }
     }
     
@@ -37,12 +36,15 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     
     
     var mapItems: [MKMapItem] = []
+    var searchResultDataSource:SearchDataSource?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         self.initMapRegion()
+        self.searchResultDataSource = SearchDataSource(items: self.mapItems)
+        self.tableView.dataSource = searchResultDataSource
     }
 
     //MARK: - Search Job
@@ -69,6 +71,7 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
                     self.mapItems.append(item)
                 }
                 
+                self.searchResultDataSource?.items = self.mapItems
                 dispatch_async(dispatch_get_main_queue()) {
                     self.mapView.showAnnotations(self.mapView.annotations, animated: true)
                     self.tableView.reloadData()
@@ -103,20 +106,7 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     
-    //MARK: - Table View
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.mapItems.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        
-        let item = self.mapItems[indexPath.row]
-        cell.textLabel?.text = item.name
-        cell.detailTextLabel?.text = item.placemark.title
-        return cell
-    }
-    
+    //MARK: - TableView delegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let item = self.mapItems[indexPath.row]
         
