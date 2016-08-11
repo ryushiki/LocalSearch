@@ -42,6 +42,7 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     var mapItemTo: MKMapItem?
     var routeIndex: Int = 0
     var response: MKDirectionsResponse?
+    var selectRoute: MKRoute?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,6 +172,7 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
                 //get the designation route
                 let routeNo = routeIndex % response!.routes.count
                 let route = response!.routes[routeNo]
+                self.selectRoute = route
                 
                 let distanceFormat = MKDistanceFormatter()
                 let distance = distanceFormat.stringFromDistance(route.distance)
@@ -185,5 +187,17 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
             }
         }
         
+    }
+    
+    func setGestureOnTableView() {
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action:
+            #selector(exectueNavi))
+        
+        tapGestureRecognizer.numberOfTapsRequired = 2
+        self.tableView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    func exectueNavi() {
+        self.performSegueWithIdentifier("showNaviPage", sender: self)
     }
 }
