@@ -13,6 +13,8 @@
 		DF7148B31D57255600ED2613 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF7148B11D57255600ED2613 /* LaunchScreen.storyboard */; };
 		DF7148BD1D5725A300ED2613 /* LocalSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */; };
 		DF7148BF1D572A7900ED2613 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF7148BE1D572A7900ED2613 /* MapKit.framework */; };
+		DF7AA25A1D5EF6B60024C360 /* LocalSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7AA2591D5EF6B60024C360 /* LocalSearchModel.swift */; };
+		DF7AA25C1D5F18C80024C360 /* CurrentLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7AA25B1D5F18C80024C360 /* CurrentLocationManager.swift */; };
 		DF9F14E01D5CA8AE002BB082 /* NaviViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9F14DF1D5CA8AE002BB082 /* NaviViewController.swift */; };
 		E92111B11D5974DB00D6124F /* SearchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E92111B01D5974DB00D6124F /* SearchDataSource.swift */; };
 /* End PBXBuildFile section */
@@ -26,6 +28,8 @@
 		DF7148B41D57255700ED2613 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearchViewController.swift; sourceTree = "<group>"; };
 		DF7148BE1D572A7900ED2613 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		DF7AA2591D5EF6B60024C360 /* LocalSearchModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearchModel.swift; sourceTree = "<group>"; };
+		DF7AA25B1D5F18C80024C360 /* CurrentLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationManager.swift; sourceTree = "<group>"; };
 		DF9F14DF1D5CA8AE002BB082 /* NaviViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaviViewController.swift; sourceTree = "<group>"; };
 		E92111B01D5974DB00D6124F /* SearchDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,10 +65,9 @@
 		DF7148A71D57255600ED2613 /* LocalSearch */ = {
 			isa = PBXGroup;
 			children = (
+				DF7AA2561D5EEBEB0024C360 /* ViewController */,
+				DF7AA2581D5EF6950024C360 /* Model */,
 				DF7148A81D57255600ED2613 /* AppDelegate.swift */,
-				DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */,
-				E92111B01D5974DB00D6124F /* SearchDataSource.swift */,
-				DF9F14DF1D5CA8AE002BB082 /* NaviViewController.swift */,
 				DF7148AC1D57255600ED2613 /* Main.storyboard */,
 				DF7148AF1D57255600ED2613 /* Assets.xcassets */,
 				DF7148BE1D572A7900ED2613 /* MapKit.framework */,
@@ -80,6 +83,25 @@
 				DF7148B11D57255600ED2613 /* LaunchScreen.storyboard */,
 			);
 			name = "Resource File";
+			sourceTree = "<group>";
+		};
+		DF7AA2561D5EEBEB0024C360 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				DF9F14DF1D5CA8AE002BB082 /* NaviViewController.swift */,
+				E92111B01D5974DB00D6124F /* SearchDataSource.swift */,
+				DF7148BC1D5725A300ED2613 /* LocalSearchViewController.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		DF7AA2581D5EF6950024C360 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DF7AA2591D5EF6B60024C360 /* LocalSearchModel.swift */,
+				DF7AA25B1D5F18C80024C360 /* CurrentLocationManager.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,8 +181,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF7AA25C1D5F18C80024C360 /* CurrentLocationManager.swift in Sources */,
 				DF9F14E01D5CA8AE002BB082 /* NaviViewController.swift in Sources */,
 				E92111B11D5974DB00D6124F /* SearchDataSource.swift in Sources */,
+				DF7AA25A1D5EF6B60024C360 /* LocalSearchModel.swift in Sources */,
 				DF7148BD1D5725A300ED2613 /* LocalSearchViewController.swift in Sources */,
 				DF7148A91D57255600ED2613 /* AppDelegate.swift in Sources */,
 			);

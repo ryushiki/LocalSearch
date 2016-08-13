@@ -30,63 +30,105 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     }
     
     @IBAction func initButtonPressed(sender: UIButton) {
-        self.initMapRegion()
+//        self.initMapRegion()
     }
-    
     
     @IBOutlet weak var routeInfoLabel: UILabel!
     
     var mapItems: [MKMapItem] = []
     var searchResultDataSource:SearchDataSource?
-    var mapItemFrom: MKMapItem?
-    var mapItemTo: MKMapItem?
-    var routeIndex: Int = 0
-    var response: MKDirectionsResponse?
-    var selectRoute: MKRoute?
+    var localSearchModel = LocalSearchModel()
+    var currentLocationManager = CurrentLocationManager.sharedInstance
     
+    //MARK: - View Controller lifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.initMapRegion()
         self.searchResultDataSource = SearchDataSource(items: self.mapItems)
         self.tableView.dataSource = searchResultDataSource
+        
+        self.setGestureOnTableView()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.localSearchModel.addObserver(self, forKeyPath: "mapItems", options: .New, context: nil)
+        self.localSearchModel.addObserver(self, forKeyPath: "selectedRoute", options: .New, context: nil)
+        
+        self.currentLocationManager.addObserver(self, forKeyPath: "currentLocation", options: .New, context: nil)
+        self.currentLocationManager.startupGetLocation()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.localSearchModel.removeObserver(self, forKeyPath: "mapItems")
+        self.localSearchModel.removeObserver(self, forKeyPath: "selectedRoute")
+        self.currentLocationManager.removeObserver(self, forKeyPath: "currentLocation")
+    }
+    
+    //MARK: -KVO Observer
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        switch keyPath! {
+        case "mapItems":
+            updateMapItems()
+        case "selectedRoute":
+            updateSelectedRoute()
+        case "currentLocation":
+            if let currentLocation = self.currentLocationManager.currentLocation {
+                initMapRegion(currentLocation)
+            }
+        default:
+            break
+        }
+    }
+    
+    func updateMapItems() {
+        self.mapItems.removeAll()
+        
+        self.searchResultDataSource?.items = self.localSearchModel.mapItems
+        self.mapItems = self.localSearchModel.mapItems
+        dispatch_async(dispatch_get_main_queue(), {
+            self.mapView.removeAnnotations(self.mapView.annotations)
+            self.mapView.addAnnotations(self.localSearchModel.annotations)
+            self.mapView.showAnnotations(self.mapView.annotations, animated: true)
+            self.tableView.reloadData()
+        })
     }
 
+    func updateSelectedRoute() {
+        dispatch_async(dispatch_get_main_queue()){
+            //show the route in map
+            self.mapView.removeOverlays(self.mapView.overlays)
+            self.mapView.addOverlay(self.localSearchModel.selectedRoute!.polyline, level: MKOverlayLevel.AboveRoads)
+            
+            //display the explain of route in the label
+            self.routeInfoLabel.text =
+                String(format: "Via %@ %@: about %@ mins",
+                       self.localSearchModel.routeDisplayInfo!.name!,
+                       self.localSearchModel.routeDisplayInfo!.distance!,
+                       self.localSearchModel.routeDisplayInfo!.time!)
+        }
+    }
+    
+    //MARK: - Map Job
+    func initMapRegion(currentLocation:CLLocation) {
+        let center = currentLocation.coordinate
+        let span = MKCoordinateSpanMake(0.520984, 0.603312)
+        let region = MKCoordinateRegionMake(center, span)
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.mapView.region = region
+        }
+    }
+    
     //MARK: - Search Job
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         self.searchBar.resignFirstResponder()
-        
-        let request = MKLocalSearchRequest()
-        request.naturalLanguageQuery = searchBar.text
-        request.region = self.mapView.region
-        
-        let search = MKLocalSearch(request: request)
-        
-        search.startWithCompletionHandler { (let response , let error) in
-            self.mapItems.removeAll()
-            self.mapView.removeAnnotations(self.mapView.annotations)
-            
-            if let mapItems = response?.mapItems {
-                for item in mapItems {
-                    let point = MKPointAnnotation()
-                    point.coordinate = item.placemark.coordinate
-                    point.title = item.placemark.name
-                    point.subtitle = item.phoneNumber
-                    self.mapView.addAnnotation(point)
-                    self.mapItems.append(item)
-                }
-                
-                self.searchResultDataSource?.items = self.mapItems
-                self.mapItemFrom = nil
-                self.mapItemTo = nil
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.mapView.showAnnotations(self.mapView.annotations, animated: true)
-                    self.tableView.reloadData()
-                }
-            }
-        }
-        
+        //start local search
+        self.localSearchModel.localSearch(searchBar.text, searchRegion: self.mapView.region)
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
@@ -103,45 +145,19 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
         return true
     }
     
-    //MARK: - Map Job
-    
-    func initMapRegion() {
-        let center = CLLocationCoordinate2DMake(21.500352, -157.959694)
-        let span = MKCoordinateSpanMake(0.520984, 0.603312)
-        let region = MKCoordinateRegionMake(center, span)
-        
-        self.mapView.region = region
-    }
-    
     //MARK: - TableView delegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let item = self.mapItems[indexPath.row]
         
-        for annotation in mapView.annotations {
-            if annotation.coordinate.latitude == item.placemark.coordinate.latitude && annotation.coordinate.longitude == item.placemark.coordinate.longitude{
-                self.mapView.selectAnnotation(annotation, animated: true)
-                
-                if mapItemFrom == nil {
-                    mapItemFrom = item
-                } else {
-                    if mapItemTo == nil {
-                        mapItemTo = item
-                    } else {
-                        if mapItemTo == item {
-                            routeIndex += 1
-                        } else {
-                            routeIndex = 0
-                            mapItemFrom = self.mapItemTo
-                            self.mapItemTo = item
-                        }
-                    }
-                    
-                    //search the route
-                    self.findDirectionsFrom(self.mapItemFrom!, destination: self.mapItemTo!, routeIndex: routeIndex)
-                }
-                break
-            }
+        let item = self.mapItems[indexPath.row]
+        let selectedAnnotations =  self.mapView.annotations.filter({ (annotation) -> Bool in
+            return  annotation.coordinate.latitude == item.placemark.coordinate.latitude && annotation.coordinate.longitude == item.placemark.coordinate.longitude
+        })
+        
+        if let selectedAnnotation = selectedAnnotations.first {
+            self.mapView.selectAnnotation(selectedAnnotation, animated: true)
         }
+        
+        self.localSearchModel.setSearchMapItem(item)
     }
     
     func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
@@ -151,42 +167,6 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
         renderer.strokeColor = UIColor.blueColor().colorWithAlphaComponent(0.7)
         
         return renderer
-    }
-    
-    //MARK -Route Job
-    
-    func findDirectionsFrom(source: MKMapItem, destination:MKMapItem,  routeIndex:Int) {
-        //make an request of route search
-        let request = MKDirectionsRequest()
-        request.source = source
-        request.destination = destination
-        request.requestsAlternateRoutes = true
-        
-        //exectue the route search using MKDirections
-        let directions = MKDirections.init(request: request)
-        directions.calculateDirectionsWithCompletionHandler { (response, error) in
-            if error == nil {
-                self.response = response
-                print(response?.routes.count)
-                
-                //get the designation route
-                let routeNo = routeIndex % response!.routes.count
-                let route = response!.routes[routeNo]
-                self.selectRoute = route
-                
-                let distanceFormat = MKDistanceFormatter()
-                let distance = distanceFormat.stringFromDistance(route.distance)
-                let time = String(format: "%.0lf", route.expectedTravelTime/60)
-                
-                //show the route in map
-                self.mapView.removeOverlays(self.mapView.overlays)
-                self.mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
-                
-                //display the explain of route in the label
-                self.routeInfoLabel.text = String(format: "%@経由で%@:約%@分で到着", route.name, distance, time)
-            }
-        }
-        
     }
     
     func setGestureOnTableView() {
@@ -199,5 +179,13 @@ class LocalSearchViewController: UIViewController, UISearchBarDelegate, UITableV
     
     func exectueNavi() {
         self.performSegueWithIdentifier("showNaviPage", sender: self)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showNaviPage" {
+            if let nextViewController = segue.destinationViewController as? NaviViewController {
+                nextViewController.selectedRoute = localSearchModel.selectedRoute
+            }
+        }
     }
 }

@@ -66,7 +66,6 @@ class NaviViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     //MARK: - Map Job 
-    
     func moveMapCameraTo(step: MKRouteStep) {
         var ground: CLLocationCoordinate2D?
         var eye: CLLocationCoordinate2D?
